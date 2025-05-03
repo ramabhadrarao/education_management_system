@@ -1,0 +1,42 @@
+<!-- app/interfaces/web/templates/leave/apply.html -->
+{% extends 'base.html' %}
+
+{% block title %}Apply for Leave{% endblock %}
+{% block page_title %}Apply for Leave{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Apply for Leave</h3>
+    </div>
+    <div class="card-body">
+        <form action="{{ url_for('web_leave.apply_leave') }}" method="post">
+            <div class="mb-3">
+                <label class="form-label required">Leave Type</label>
+                <select name="leave_type_id" class="form-select" required>
+                    <option value="">Select Leave Type</option>
+                    {% for leave_type in leave_types %}
+                    <option value="{{ leave_type.leave_type_id }}">{{ leave_type.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label required">Start Date</label>
+                <input type="date" name="start_date" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label required">End Date</label>
+                <input type="date" name="end_date" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Reason</label>
+                <textarea name="reason" class="form-control" rows="4"></textarea>
+            </div>
+            <div class="form-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <a href="{{ url_for('web_leave.leave_list') }}" class="btn btn-secondary ms-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

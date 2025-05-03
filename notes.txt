@@ -1,0 +1,13 @@
+CREATE USER 'edu_user'@'localhost' IDENTIFIED BY 'Nihita!1981'; 
+GRANT ALL PRIVILEGES ON education_db.* TO 'edu_user'@'localhost';
+FLUSH PRIVILEGES;
+
+
+
+step 1: 
+
+pip install mysqlclient
+
+pip install Flask-Migrate
+pip install flask[cli]
+

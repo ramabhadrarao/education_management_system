@@ -1,0 +1,203 @@
+<!-- app/interfaces/web/templates/faculty_profile/edit.html -->
+{% extends 'base.html' %}
+
+{% block title %}Edit Faculty Profile{% endblock %}
+{% block page_title %}Edit Faculty Profile{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Edit Basic Information</h3>
+    </div>
+    <div class="card-body">
+        <form action="{{ url_for('web_faculty_profile.edit_profile', faculty_id=faculty.faculty_id) }}" method="post" enctype="multipart/form-data">
+            <div class="row mb-3">
+                <div class="col-lg-3">
+                    <div class="mb-3">
+                        <div class="form-label">Profile Photo</div>
+                        <div class="text-center">
+                            {% if faculty.photo_attachment_id %}
+                            <img src="{{ url_for('static', filename='uploads/' + faculty.photo_attachment.file_path) }}" class="avatar avatar-xl mb-3">
+                            {% else %}
+                            <span class="avatar avatar-xl mb-3">{{ faculty.first_name[0] }}{{ faculty.last_name[0] if faculty.last_name else '' }}</span>
+                            {% endif %}
+                            <input type="file" name="profile_photo" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label required">First Name</label>
+                            <input type="text" name="first_name" class="form-control" value="{{ faculty.first_name }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" name="last_name" class="form-control" value="{{ faculty.last_name }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Registration Number</label>
+                            <input type="text" class="form-control" value="{{ faculty.regdno }}" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Gender</label>
+                            <select name="gender" class="form-select">
+                                <option value="">Select Gender</option>
+                                <option value="Male" {% if faculty.gender == 'Male' %}selected{% endif %}>Male</option>
+                                <option value="Female" {% if faculty.gender == 'Female' %}selected{% endif %}>Female</option>
+                                <option value="Other" {% if faculty.gender == 'Other' %}selected{% endif %}>Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Date of Birth</label>
+                            <input type="date" name="dob" class="form-control" value="{{ faculty.dob.strftime('%Y-%m-%d') if faculty.dob else '' }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label required">Email</label>
+                            <input type="email" name="email" class="form-control" value="{{ faculty.email }}" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h4 class="mt-4 mb-3">Personal Information</h4>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Department</label>
+                    <input type="text" name="department" class="form-control" value="{{ additional_details.department if additional_details else '' }}">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Position</label>
+                    <input type="text" name="position" class="form-control" value="{{ additional_details.position if additional_details else '' }}">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Father's Name</label>
+                    <input type="text" name="father_name" class="form-control" value="{{ additional_details.father_name if additional_details else '' }}">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Father's Occupation</label>
+                    <input type="text" name="father_occupation" class="form-control" value="{{ additional_details.father_occupation if additional_details else '' }}">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Mother's Name</label>
+<!-- app/interfaces/web/templates/faculty_profile/edit.html (continued) -->
+<input type="text" name="mother_name" class="form-control" value="{{ additional_details.mother_name if additional_details else '' }}">
+</div>
+<div class="col-md-6 mb-3">
+    <label class="form-label">Mother's Occupation</label>
+    <input type="text" name="mother_occupation" class="form-control" value="{{ additional_details.mother_occupation if additional_details else '' }}">
+</div>
+<div class="col-md-6 mb-3">
+    <label class="form-label">Marital Status</label>
+    <select name="marital_status" class="form-select">
+        <option value="">Select Status</option>
+        <option value="Single" {% if additional_details and additional_details.marital_status == 'Single' %}selected{% endif %}>Single</option>
+        <option value="Married" {% if additional_details and additional_details.marital_status == 'Married' %}selected{% endif %}>Married</option>
+        <option value="Divorced" {% if additional_details and additional_details.marital_status == 'Divorced' %}selected{% endif %}>Divorced</option>
+        <option value="Widowed" {% if additional_details and additional_details.marital_status == 'Widowed' %}selected{% endif %}>Widowed</option>
+    </select>
+</div>
+<div class="col-md-6 mb-3">
+    <label class="form-label">Spouse Name</label>
+    <input type="text" name="spouse_name" class="form-control" value="{{ additional_details.spouse_name if additional_details else '' }}">
+</div>
+<div class="col-md-6 mb-3">
+    <label class="form-label">Spouse Occupation</label>
+    <input type="text" name="spouse_occupation" class="form-control" value="{{ additional_details.spouse_occupation if additional_details else '' }}">
+</div>
+<div class="col-md-6 mb-3">
+    <label class="form-label">Nationality</label>
+    <input type="text" name="nationality" class="form-control" value="{{ additional_details.nationality if additional_details else '' }}">
+</div>
+<div class="col-md-6 mb-3">
+    <label class="form-label">Religion</label>
+    <input type="text" name="religion" class="form-control" value="{{ additional_details.religion if additional_details else '' }}">
+</div>
+<div class="col-md-6 mb-3">
+    <label class="form-label">Category</label>
+    <input type="text" name="category" class="form-control" value="{{ additional_details.category if additional_details else '' }}">
+</div>
+<div class="col-md-6 mb-3">
+    <label class="form-label">Caste</label>
+    <input type="text" name="caste" class="form-control" value="{{ additional_details.caste if additional_details else '' }}">
+</div>
+<div class="col-md-6 mb-3">
+    <label class="form-label">Sub-Caste</label>
+    <input type="text" name="sub_caste" class="form-control" value="{{ additional_details.sub_caste if additional_details else '' }}">
+</div>
+</div>
+
+<h4 class="mt-4 mb-3">Contact Information</h4>
+<div class="row">
+<div class="col-md-6 mb-3">
+    <label class="form-label">Contact Number</label>
+    <input type="text" name="contact_no" class="form-control" value="{{ faculty.contact_no }}">
+</div>
+<div class="col-md-6 mb-3">
+    <label class="form-label">Alternate Contact</label>
+    <input type="text" name="contact_no2" class="form-control" value="{{ additional_details.contact_no2 if additional_details else '' }}">
+</div>
+<div class="col-md-6 mb-3">
+    <label class="form-label">Blood Group</label>
+    <select name="blood_group" class="form-select">
+        <option value="">Select Blood Group</option>
+        <option value="A+" {% if additional_details and additional_details.blood_group == 'A+' %}selected{% endif %}>A+</option>
+        <option value="A-" {% if additional_details and additional_details.blood_group == 'A-' %}selected{% endif %}>A-</option>
+        <option value="B+" {% if additional_details and additional_details.blood_group == 'B+' %}selected{% endif %}>B+</option>
+        <option value="B-" {% if additional_details and additional_details.blood_group == 'B-' %}selected{% endif %}>B-</option>
+        <option value="AB+" {% if additional_details and additional_details.blood_group == 'AB+' %}selected{% endif %}>AB+</option>
+        <option value="AB-" {% if additional_details and additional_details.blood_group == 'AB-' %}selected{% endif %}>AB-</option>
+        <option value="O+" {% if additional_details and additional_details.blood_group == 'O+' %}selected{% endif %}>O+</option>
+        <option value="O-" {% if additional_details and additional_details.blood_group == 'O-' %}selected{% endif %}>O-</option>
+    </select>
+</div>
+<div class="col-md-6 mb-3">
+    <label class="form-label">Aadhar Number</label>
+    <input type="text" name="aadhar_no" class="form-control" value="{{ additional_details.aadhar_no if additional_details else '' }}">
+</div>
+<div class="col-md-6 mb-3">
+    <label class="form-label">PAN Number</label>
+    <input type="text" name="pan_no" class="form-control" value="{{ additional_details.pan_no if additional_details else '' }}">
+</div>
+<div class="col-12 mb-3">
+    <label class="form-label">Address</label>
+    <textarea name="address" class="form-control" rows="2">{{ faculty.address }}</textarea>
+</div>
+<div class="col-12 mb-3">
+    <label class="form-label">Permanent Address</label>
+    <textarea name="permanent_address" class="form-control" rows="2">{{ additional_details.permanent_address if additional_details else '' }}</textarea>
+</div>
+<div class="col-12 mb-3">
+    <label class="form-label">Correspondence Address</label>
+    <textarea name="correspondence_address" class="form-control" rows="2">{{ additional_details.correspondence_address if additional_details else '' }}</textarea>
+</div>
+</div>
+
+<h4 class="mt-4 mb-3">Academic Identifiers</h4>
+<div class="row">
+<div class="col-md-6 mb-3">
+    <label class="form-label">ORCID ID</label>
+    <input type="text" name="orcid_id" class="form-control" value="{{ additional_details.orcid_id if additional_details else '' }}">
+</div>
+<div class="col-md-6 mb-3">
+    <label class="form-label">Scopus Author ID</label>
+    <input type="text" name="scopus_author_id" class="form-control" value="{{ additional_details.scopus_author_id if additional_details else '' }}">
+</div>
+<div class="col-md-6 mb-3">
+    <label class="form-label">Google Scholar Link</label>
+    <input type="url" name="google_scholar_id_link" class="form-control" value="{{ additional_details.google_scholar_id_link if additional_details else '' }}">
+</div>
+<div class="col-md-6 mb-3">
+    <label class="form-label">AICTE ID</label>
+    <input type="text" name="aicte_id" class="form-control" value="{{ additional_details.aicte_id if additional_details else '' }}">
+</div>
+</div>
+
+<div class="form-footer">
+<button type="submit" class="btn btn-primary">Save Changes</button>
+<a href="{{ url_for('web_faculty_profile.view_profile', faculty_id=faculty.faculty_id) }}" class="btn btn-secondary ms-2">Cancel</a>
+</div>
+</form>
+</div>
+</div>
+{% endblock %}

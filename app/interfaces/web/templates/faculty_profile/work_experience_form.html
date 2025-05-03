@@ -1,0 +1,60 @@
+<!-- app/interfaces/web/templates/faculty_profile/work_experience_form.html -->
+{% extends 'base.html' %}
+
+{% block title %}Add Work Experience{% endblock %}
+{% block page_title %}Add Work Experience{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Add Work Experience</h3>
+    </div>
+    <div class="card-body">
+        <form action="{{ url_for('web_faculty_profile.add_work_experience', faculty_id=faculty.faculty_id) }}" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label required">Institution Name</label>
+                    <input type="text" name="institution_name" class="form-control" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label required">Experience Type</label>
+                    <select name="experience_type" class="form-select" required>
+                        <option value="">Select Type</option>
+                        <option value="Teaching">Teaching</option>
+                        <option value="Industry">Industry</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Designation</label>
+                    <input type="text" name="designation" class="form-control">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Number of Years</label>
+                    <input type="number" name="number_of_years" class="form-control" min="0" step="0.5">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">From Date</label>
+                    <input type="date" name="from_date" class="form-control">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">To Date</label>
+                    <input type="date" name="to_date" class="form-control">
+                    <small class="form-hint">Leave blank if currently employed</small>
+                </div>
+                <div class="col-12 mb-3">
+                    <label class="form-label">Responsibilities</label>
+                    <textarea name="responsibilities" class="form-control" rows="4"></textarea>
+                </div>
+                <div class="col-12 mb-3">
+                    <label class="form-label">Service Certificate</label>
+                    <input type="file" name="certificate" class="form-control">
+                </div>
+            </div>
+            <div class="form-footer">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a href="{{ url_for('web_faculty_profile.view_profile', faculty_id=faculty.faculty_id) }}" class="btn btn-secondary ms-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

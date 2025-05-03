@@ -1,0 +1,51 @@
+<!-- app/interfaces/web/templates/adjustment/respond.html -->
+{% extends 'base.html' %}
+
+{% block title %}Respond to Period Adjustment{% endblock %}
+{% block page_title %}Respond to Period Adjustment{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Respond to Period Adjustment Request</h3>
+    </div>
+    <div class="card-body">
+        <div class="mb-3">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Leave Details</h4>
+                    <p><strong>Faculty:</strong> {{ adjustment.faculty.first_name }} {{ adjustment.faculty.last_name }}</p>
+                    <p><strong>Leave Period:</strong> {{ adjustment.leave.start_date.strftime('%Y-%m-%d') }} to {{ adjustment.leave.end_date.strftime('%Y-%m-%d') }}</p>
+                    <p><strong>Reason:</strong> {{ adjustment.leave.reason }}</p>
+                </div>
+                <div class="col-md-6">
+                    <h4>Adjustment Details</h4>
+                    <p><strong>Course:</strong> {{ adjustment.course.course_name }}</p>
+                    <p><strong>Batch:</strong> {{ adjustment.batch.batch_name }}</p>
+                    <p><strong>Date:</strong> {{ adjustment.adjustment_date.strftime('%Y-%m-%d') }}</p>
+                    <p><strong>Period:</strong> {{ adjustment.period_number }}</p>
+                </div>
+            </div>
+        </div>
+        <form action="{{ url_for('web_adjustment.respond_adjustment', adjustment_id=adjustment.adjustment_id) }}" method="post">
+            <div class="mb-3">
+                <label class="form-label">Response</label>
+                <div class="form-selectgroup">
+                    <label class="form-selectgroup-item">
+                        <input type="radio" name="status" value="Accepted" class="form-selectgroup-input" required>
+                        <span class="form-selectgroup-label">Accept</span>
+                    </label>
+                    <label class="form-selectgroup-item">
+                        <input type="radio" name="status" value="Rejected" class="form-selectgroup-input">
+                        <span class="form-selectgroup-label">Reject</span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <a href="{{ url_for('web_dashboard.index') }}" class="btn btn-secondary ms-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

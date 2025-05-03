@@ -1,0 +1,57 @@
+<!-- app/interfaces/web/templates/adjustment/request.html -->
+{% extends 'base.html' %}
+
+{% block title %}Request Period Adjustment{% endblock %}
+{% block page_title %}Request Period Adjustment{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Request Period Adjustment for Leave #{{ leave.leave_id }}</h3>
+    </div>
+    <div class="card-body">
+        <form action="{{ url_for('web_adjustment.request_adjustment', leave_id=leave.leave_id) }}" method="post">
+            <div class="mb-3">
+                <label class="form-label required">Substitute Faculty</label>
+                <select name="substitute_faculty_id" class="form-select" required>
+                    <option value="">Select Faculty</option>
+                    {% for faculty in faculties %}
+                    <option value="{{ faculty.faculty_id }}">{{ faculty.first_name }} {{ faculty.last_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label required">Course</label>
+                <select name="course_id" class="form-select" required>
+                    <option value="">Select Course</option>
+                    {% for course in courses %}
+                    <option value="{{ course.course_id }}">{{ course.course_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label required">Batch</label>
+                <select name="batch_id" class="form-select" required>
+                    <option value="">Select Batch</option>
+                    {% for batch in batches %}
+                    <option value="{{ batch.batch_id }}">{{ batch.batch_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label required">Adjustment Date</label>
+                <!-- app/interfaces/web/templates/adjustment/request.html (continued) -->
+                <input type="date" name="adjustment_date" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label required">Period Number</label>
+                <input type="number" name="period_number" class="form-control" min="1" max="8" required>
+            </div>
+            <div class="form-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <a href="{{ url_for('web_leave.leave_list') }}" class="btn btn-secondary ms-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

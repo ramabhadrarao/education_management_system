@@ -1,0 +1,60 @@
+<!-- app/interfaces/web/templates/faculty_profile/research_consultancy_form.html -->
+{% extends 'base.html' %}
+
+{% block title %}Add Research/Consultancy Project{% endblock %}
+{% block page_title %}Add Research/Consultancy Project{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Add Research or Consultancy Project</h3>
+    </div>
+    <div class="card-body">
+        <form action="{{ url_for('web_faculty_profile.add_research_consultancy', faculty_id=faculty.faculty_id) }}" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label required">Project Title</label>
+                    <input type="text" name="project_title" class="form-control" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Funding Agency</label>
+                    <select name="agency_id" class="form-select">
+                        <option value="">Select Agency</option>
+                        {% for agency in funding_agencies %}
+                        <option value="{{ agency.lookup_id }}">{{ agency.lookup_value }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Start Date</label>
+                    <input type="date" name="start_date" class="form-control">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">End Date</label>
+                    <input type="date" name="end_date" class="form-control">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Status</label>
+                    <select name="status" class="form-select">
+                        <option value="">Select Status</option>
+                        <option value="Ongoing">Ongoing</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+                <div class="col-12 mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-control" rows="4"></textarea>
+                </div>
+                <div class="col-12 mb-3">
+                    <label class="form-label">Project Document</label>
+                    <input type="file" name="project_file" class="form-control">
+                </div>
+            </div>
+            <div class="form-footer">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a href="{{ url_for('web_faculty_profile.view_profile', faculty_id=faculty.faculty_id) }}" class="btn btn-secondary ms-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

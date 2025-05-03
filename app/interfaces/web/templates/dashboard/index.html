@@ -1,0 +1,189 @@
+<!-- app/interfaces/web/templates/dashboard/index.html -->
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row row-deck row-cards">
+    {% if current_user.role in ['admin', 'hod'] %}
+    <!-- Admin/HOD Dashboard -->
+    <div class="col-sm-6 col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="subheader">Total Faculty</div>
+                </div>
+                <div class="h1 mb-3">{{ faculty_count }}</div>
+                <div class="d-flex mb-2">
+                    <div>Faculty Members</div>
+                </div>
+                <div class="progress progress-sm">
+                    <div class="progress-bar bg-blue" style="width: 100%" role="progressbar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="subheader">Total Students</div>
+                </div>
+                <div class="h1 mb-3">{{ student_count }}</div>
+                <div class="d-flex mb-2">
+                    <div>Students</div>
+                </div>
+                <div class="progress progress-sm">
+                    <div class="progress-bar bg-green" style="width: 100%" role="progressbar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Pending Leave Requests</h3>
+            </div>
+            <div class="card-body">
+                <!-- Placeholder for pending leave requests widget -->
+                <div class="table-responsive">
+                    <table class="table table-vcenter card-table">
+                        <thead>
+                            <tr>
+                                <th>Faculty</th>
+                                <th>Leave Type</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dynamic content would be loaded here -->
+                            <tr>
+                                <td colspan="5" class="text-center">Loading pending leave requests...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% elif current_user.role == 'faculty' %}
+    <!-- Faculty Dashboard -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Pending Period Adjustment Requests</h3>
+            </div>
+            <div class="card-body">
+                {% if pending_adjustments %}
+                <div class="table-responsive">
+                    <table class="table table-vcenter card-table">
+                        <thead>
+                            <tr>
+                                <th>Requested By</th>
+                                <th>Course</th>
+                                <th>Batch</th>
+                                <th>Date</th>
+                                <th>Period</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for adjustment in pending_adjustments %}
+                            <tr>
+                                <td>{{ adjustment.faculty.first_name }} {{ adjustment.faculty.last_name }}</td>
+                                <td>{{ adjustment.course.course_name }}</td>
+                                <td>{{ adjustment.batch.batch_name }}</td>
+                                <td>{{ adjustment.adjustment_date.strftime('%Y-%m-%d') }}</td>
+                                <td>{{ adjustment.period_number }}</td>
+                                <td>
+                                    <a href="{{ url_for('web_adjustment.respond_adjustment', adjustment_id=adjustment.adjustment_id) }}" class="btn btn-sm btn-primary">
+                                        Respond
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="empty">
+                    <div class="empty-icon">
+                        <i class="ti ti-calendar-off"></i>
+                    </div>
+                    <p class="empty-title">No pending adjustment requests</p>
+                    <p class="empty-subtitle text-muted">
+                        You don't have any pending period adjustment requests to respond to.
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">My Leave Status</h3>
+                <div class="card-actions">
+                    <a href="{{ url_for('web_leave.apply_leave') }}" class="btn btn-primary">
+                        Apply for Leave
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- Placeholder for leave status widget -->
+                <div class="table-responsive">
+                    <table class="table table-vcenter card-table">
+                        <thead>
+                            <tr>
+                                <th>Leave Type</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dynamic content would be loaded here -->
+                            <tr>
+                                <td colspan="4" class="text-center">Loading leave status...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% elif current_user.role == 'student' %}
+    <!-- Student Dashboard -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">My Profile Status</h3>
+                <div class="card-actions">
+                    <a href="#" class="btn btn-primary">
+                        Edit Profile
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Personal Information</h4>
+                        <p><strong>Name:</strong> {{ current_user.student.name if current_user.student else 'Not available' }}</p>
+                        <p><strong>Registration No:</strong> {{ current_user.student.regd_no if current_user.student else 'Not available' }}</p>
+                        <p><strong>Email:</strong> {{ current_user.email }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h4>Academic Information</h4>
+                        <!-- Placeholder for academic information -->
+                        <p>Academic details would be displayed here.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

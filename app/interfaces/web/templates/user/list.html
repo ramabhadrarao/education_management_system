@@ -1,0 +1,98 @@
+<!-- app/interfaces/web/templates/user/list.html -->
+{% extends 'base.html' %}
+
+{% block title %}User Management{% endblock %}
+{% block page_title %}User Management{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">User List</h3>
+        <div class="card-actions">
+            <a href="{{ url_for('web_user.create_user') }}" class="btn btn-primary">
+                <i class="ti ti-plus"></i> Create User
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="mb-3">
+            <form action="{{ url_for('web_user.user_list') }}" method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Role</label>
+                    <select name="role" class="form-select" onchange="this.form.submit()">
+                        <option value="all" {% if current_role == 'all' %}selected{% endif %}>All Roles</option>
+                        <option value="admin" {% if current_role == 'admin' %}selected{% endif %}>Admin</option>
+                        <option value="hod" {% if current_role == 'hod' %}selected{% endif %}>HOD</option>
+                        <option value="faculty" {% if current_role == 'faculty' %}selected{% endif %}>Faculty</option>
+                        <option value="student" {% if current_role == 'student' %}selected{% endif %}>Student</option>
+                    </select>
+                </div>
+                {% if current_user.role == 'admin' %}
+                <div class="col-md-4">
+                    <label class="form-label">Department</label>
+                    <select name="department_id" class="form-select" onchange="this.form.submit()">
+                        <option value="">All Departments</option>
+                        {% for department in departments %}
+                        <option value="{{ department.department_id }}" {% if request.args.get('department_id')|int == department.department_id %}selected{% endif %}>
+                            {{ department.department_name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+            </form>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-vcenter table-mobile-md card-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.user_id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            <span class="badge {% if user.role == 'admin' %}bg-purple{% elif user.role == 'hod' %}bg-blue{% elif user.role == 'faculty' %}bg-green{% else %}bg-azure{% endif %}">
+                                {{ user.role|capitalize }}
+                            </span>
+                        </td>
+                        <td>{{ user.department.department_name if user.department else 'N/A' }}</td>
+                        <td>
+                            <span class="badge {% if user.is_active %}bg-success{% else %}bg-danger{% endif %}">
+                                {{ 'Active' if user.is_active else 'Inactive' }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="btn-list flex-nowrap">
+                                <a href="{{ url_for('web_user.edit_user', user_id=user.user_id) }}" class="btn btn-sm btn-primary">
+                                    Edit
+                                </a>
+                                {% if current_user.role == 'admin' and user.user_id != current_user.user_id %}
+                                <form action="{{ url_for('web_user.delete_user', user_id=user.user_id) }}" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center">No users found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,76 @@
+<!-- app/interfaces/web/templates/leave/list.html -->
+{% extends 'base.html' %}
+
+{% block title %}My Leaves{% endblock %}
+{% block page_title %}My Leaves{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Leave Requests</h3>
+        {% if current_user.role == 'faculty' %}
+        <div class="card-actions">
+            <a href="{{ url_for('web_leave.apply_leave') }}" class="btn btn-primary">
+                Apply for Leave
+            </a>
+        </div>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-vcenter table-mobile-md card-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        {% if current_user.role in ['admin', 'hod'] %}
+                        <th>Faculty</th>
+                        {% endif %}
+                        <th>Leave Type</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for leave in leaves %}
+                    <tr>
+                        <td>{{ leave.leave_id }}</td>
+                        {% if current_user.role in ['admin', 'hod'] %}
+                        <td>{{ leave.faculty.first_name }} {{ leave.faculty.last_name }}</td>
+                        {% endif %}
+                        <td>{{ leave.leave_type.name }}</td>
+                        <td>{{ leave.start_date.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ leave.end_date.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            {% if leave.status == 'Pending' %}
+                            <span class="badge bg-warning">Pending</span>
+                            {% elif leave.status == 'Approved' %}
+                            <span class="badge bg-success">Approved</span>
+                            {% elif leave.status == 'Rejected' %}
+                            <span class="badge bg-danger">Rejected</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if current_user.role in ['admin', 'hod'] and leave.status == 'Pending' %}
+                            <a href="{{ url_for('web_leave.approve_leave', leave_id=leave.leave_id) }}" class="btn btn-sm btn-primary">
+                                Process
+                            </a>
+                            {% elif current_user.role == 'faculty' and leave.status == 'Approved' %}
+                            <a href="{{ url_for('web_adjustment.request_adjustment', leave_id=leave.leave_id) }}" class="btn btn-sm btn-info">
+                                Request Adjustment
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="{% if current_user.role in ['admin', 'hod'] %}7{% else %}6{% endif %}" class="text-center">No leave requests found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

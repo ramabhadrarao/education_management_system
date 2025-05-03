@@ -1,0 +1,52 @@
+<!-- app/interfaces/web/templates/faculty_profile/award_form.html -->
+{% extends 'base.html' %}
+
+{% block title %}Add Award{% endblock %}
+{% block page_title %}Add Honour/Award{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Add Honour or Award</h3>
+    </div>
+    <div class="card-body">
+        <form action="{{ url_for('web_faculty_profile.add_award', faculty_id=faculty.faculty_id) }}" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label required">Award Title</label>
+                    <input type="text" name="award_title" class="form-control" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Awarded By</label>
+                    <input type="text" name="awarded_by" class="form-control">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Date</label>
+                    <input type="date" name="date" class="form-control">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Category</label>
+                    <select name="category_id" class="form-select">
+                        <option value="">Select Category</option>
+                        {% for category in award_categories %}
+                        <option value="{{ category.lookup_id }}">{{ category.lookup_value }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12 mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-control" rows="4"></textarea>
+                </div>
+                <div class="col-12 mb-3">
+                    <label class="form-label">Certificate</label>
+                    <input type="file" name="certificate" class="form-control">
+                </div>
+            </div>
+            <div class="form-footer">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a href="{{ url_for('web_faculty_profile.view_profile', faculty_id=faculty.faculty_id) }}" class="btn btn-secondary ms-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
